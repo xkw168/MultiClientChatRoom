@@ -19,21 +19,23 @@ public:
 	ServerManager(CServerDlg* dialog);
 	~ServerManager(void);
 
-	void StartListening(int iPort);
-	
-	static UINT __cdecl DataThreadFunc(LPVOID pParam);
-	UINT SendReceiveData(SOCKET cSocket);
-	void ClearServer();
 	WSADATA wsa;
     SOCKET s , new_socket;
+
 	//static SOCKET sArray[100];
     struct sockaddr_in server , client;
     int c;
+
     //static int iCount;
 	int iTempCount;
 	CServerDlg* m_pDialog;
 	HANDLE m_Thread_handle[100];
 	CWinThread *cpTh[100];
+
 	static void SetStaticVariable(int iC, SOCKET cS);
+	void StartListening(int iPort);
+	static UINT __cdecl DataThreadFunc(LPVOID pParam);
+	UINT SendReceiveData(SOCKET cSocket);
+	void ClearServer();
 };
 

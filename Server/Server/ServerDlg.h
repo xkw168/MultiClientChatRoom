@@ -38,13 +38,12 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
-	afx_msg void OnEnChangeEdit2();
 	CString m_buffer;
 	CEdit m_Textbox;
 	afx_msg void OnBnClickedCancel();
 	afx_msg void OnBnClickedOk();
-	afx_msg void OnBnClickedButton1();
-	afx_msg void OnBnClickedButton2();
+	afx_msg void OnClickedBtStart();
+	afx_msg void OnClickedBtStop();
 
 	ServerManager *m_pServer;
 	static UINT __cdecl StaticThreadFunc(LPVOID pParam);

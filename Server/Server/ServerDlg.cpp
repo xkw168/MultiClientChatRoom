@@ -52,16 +52,13 @@ END_MESSAGE_MAP()
 
 
 // CServerDlg dialog
-
-
-
-
 CServerDlg::CServerDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CServerDlg::IDD, pParent),
 	m_pServer(NULL)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	m_buffer = _T("");
+	cTh = NULL;
 }
 
 void CServerDlg::DoDataExchange(CDataExchange* pDX)
@@ -76,11 +73,10 @@ BEGIN_MESSAGE_MAP(CServerDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_EN_CHANGE(IDC_EDIT2, &CServerDlg::OnEnChangeEdit2)
 	ON_BN_CLICKED(IDCANCEL, &CServerDlg::OnBnClickedCancel)
 	ON_BN_CLICKED(IDOK, &CServerDlg::OnBnClickedOk)
-	ON_BN_CLICKED(IDC_BUTTON1, &CServerDlg::OnBnClickedButton1)
-	ON_BN_CLICKED(IDC_BUTTON2, &CServerDlg::OnBnClickedButton2)
+	ON_BN_CLICKED(IDC_BT_START, &CServerDlg::OnClickedBtStart)
+    ON_BN_CLICKED(IDC_BT_STOP, &CServerDlg::OnClickedBtStop)
 END_MESSAGE_MAP()
 
 
@@ -168,64 +164,51 @@ HCURSOR CServerDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-
-
-void CServerDlg::OnEnChangeEdit2()
-{
-	// TODO:  If this is a RICHEDIT control, the control will not
-	// send this notification unless you override the CDialogEx::OnInitDialog()
-	// function and call CRichEditCtrl().SetEventMask()
-	// with the ENM_CHANGE flag ORed into the mask.
-
-	// TODO:  Add your control notification handler code here
-	
-	//UpdateData(FALSE);
-	//m_buffer="I am in";
-	//UpdateData(FALSE);
-}
-
-
 void CServerDlg::OnBnClickedCancel()
 {
 	// TODO: Add your control notification handler code here
 	CDialogEx::OnCancel();
 }
 
-
 void CServerDlg::OnBnClickedOk()
 {
 	// TODO: Add your control notification handler code here
 	//CDialogEx::OnOK();
-	OnBnClickedButton1();
+	OnClickedBtStart();
 }
 
-
-void CServerDlg::OnBnClickedButton1()
+void CServerDlg::OnClickedBtStart()
 {
-	// TODO: Add your control notification handler code here
-
-	cTh = AfxBeginThread(
-    StaticThreadFunc,
-    this);
-	
-	//cTh->m_bAutoDelete = FALSE;
-	m_Thread_handle = cTh->m_hThread;
-	 
+	if (!cTh)
+	{
+		//开启新的线程
+		cTh = AfxBeginThread(StaticThreadFunc, this);
+		//cTh->m_bAutoDelete = FALSE;
+		m_Thread_handle = cTh->m_hThread;//返回该线程的Handle
+	}
+	else
+	{
+		ShowServerInfo("There has been a serve running......\n");
+	}
 }
 
-
-void CServerDlg::OnBnClickedButton2()
+void CServerDlg::OnClickedBtStop()
 {
-	// TODO: Add your control notification handler code here
-	CloseHandle(m_Thread_handle);
-
-	//AfxEndThread(0 ,true);
-	//DWORD dwCode;  
-    //GetExitCodeThread(cTh->m_hThread, &dwCode);  
-    //delete cTh; 
-	//Sleep(1);
-	//m_pServer->ClearServer();
-	delete m_pServer;
+	if (m_Thread_handle != NULL)
+	{
+		CloseHandle(m_Thread_handle);
+	}
+	cTh = NULL;
+	if (m_pServer != NULL) 
+	{
+		m_pServer->ClearServer();
+		m_pServer = NULL;
+		ShowServerInfo("Stop successful\n");
+	}
+	else
+	{
+		ShowServerInfo("The serve has been stopped......\n");
+	}
 }
 
 void CServerDlg::ShowServerInfo(string sValue)

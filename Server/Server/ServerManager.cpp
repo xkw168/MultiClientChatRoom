@@ -11,8 +11,8 @@ make sure to write my credits
 #include "Server.h"
 #include "ServerDlg.h"
 #include <Windows.h>
-#include<winsock2.h>
-#include<WS2tcpip.h>
+#include <winsock2.h>
+#include <WS2tcpip.h>
 
 static SOCKET sArray[100];
 static int iCount;
@@ -20,7 +20,6 @@ ServerManager::ServerManager(CServerDlg* dialog)
 {
 	m_pDialog = dialog;
 }
-
 
 ServerManager::~ServerManager()
 {
@@ -32,7 +31,7 @@ ServerManager::~ServerManager()
 void ServerManager::ClearServer()
 {
 	closesocket(s);
-    WSACleanup();
+    WSACleanup();//terminates use of the Ws2_32.dll
 
 	/*
 	for(int i=1;i<=iCount;++i)
@@ -48,15 +47,16 @@ void ServerManager::StartListening(int iPort)
 {
 	iCount=0;
 	printf("\nInitialising Winsock...");
+	//WASStartup: initiates use of Ws2_32.dll by a process
     if (WSAStartup(MAKEWORD(2,2),&wsa) != 0)
     {
-        printf("Failed. Error Code : %d",WSAGetLastError());
+        printf("Failed. Error Code : %d", WSAGetLastError());
         return;
     }
-     
+    
     printf("Initialised.\n");
-     
-    //Create a socket
+    
+    //Create a socket(AF_INET: internet work, SOCK_STREAM: Use TCP protocol)
     if((s = socket(AF_INET , SOCK_STREAM , 0 )) == INVALID_SOCKET)
     {
         printf("Could not create socket : %d" , WSAGetLastError());
@@ -80,7 +80,7 @@ void ServerManager::StartListening(int iPort)
      
     puts("Bind done");
  
-    //Listen to incoming connections
+    //Listen to incoming connections, maximum connection 100
     listen(s , 100);
 	 char *message;
 	 puts("Waiting for incoming connections...");
@@ -98,24 +98,24 @@ void ServerManager::StartListening(int iPort)
 		int port;
 
 		len = sizeof addr;
+		//retrieves the name of the peer to which a socket is connected
 		getpeername(new_socket, (struct sockaddr*)&addr, &len);
 
 		// deal with IPv4:
 		if (addr.ss_family == AF_INET) {
 			struct sockaddr_in *s = (struct sockaddr_in *)&addr;
 			port = ntohs(s->sin_port);
+			//converts an (Ipv4) Internet network address into a string in Internet standard dotted format
 			inet_ntop(AF_INET, &s->sin_addr, ipstr, sizeof ipstr);
 		}
 
 		printf("Peer IP address: %s\n", ipstr);
-		m_pDialog->ShowServerInfo("Connected Peer IP address: "+string(ipstr)+"\n");
-		CWinThread *cTh = AfxBeginThread(
-		DataThreadFunc,
-		(LPVOID)new_socket);
+		m_pDialog->ShowServerInfo("Connected Peer IP address: " + string(ipstr) + "\n");
+		CWinThread *cTh = AfxBeginThread(DataThreadFunc, (LPVOID)new_socket);
 		++iCount;
 		//m_Thread_handle[++iCount] = cTh->m_hThread;
 		//cpTh[iCount] = cTh;
-		sArray[iCount] = new_socket;
+		sArray[iCount] = new_socket;//store the new connection
 		//message = "Hello Client , I have received your connection.\n";
         //send(new_socket , message , strlen(message) , 0);
 
@@ -138,20 +138,19 @@ UINT __cdecl ServerManager::DataThreadFunc(LPVOID pParam)
 
 	char *message;
 	message = "Welcome to Matrix chat room.\n";
-    send(pYourSocket , message , strlen(message) , 0);
+    send(pYourSocket , message , strlen(message) , 0);//send the message to a specific connected socket
 	char server_reply[2000];
     int recv_size;
 
 	while((recv_size = recv(pYourSocket , server_reply , 2000 , 0)) != SOCKET_ERROR)
 	{
-		server_reply[recv_size] = '\0';
+		server_reply[recv_size] = '\0';//the end of a string
 		//m_pDialog->ShowServerInfo("Message Received: "+ string(server_reply));
-		for(int i = 1;i<=iCount; i++)
-		{
-			if( send(sArray[i] , server_reply, recv_size , 0) < 0)
+		for(int i = 1;i <= iCount; i++)
+		{//transfer the received message to every connected client(socket)
+			if( send(sArray[i] , server_reply, recv_size , 0)  == SOCKET_ERROR)
 			{
 				puts("Send failed");
-				//return -1;
 			}
 		}
 
@@ -161,7 +160,6 @@ UINT __cdecl ServerManager::DataThreadFunc(LPVOID pParam)
 
 UINT ServerManager::SendReceiveData(SOCKET cSocket)
 {
-
 	return 0;
 }
 

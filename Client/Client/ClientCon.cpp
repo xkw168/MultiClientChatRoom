@@ -88,7 +88,7 @@ void ClientCon::StartConnect(string sAddress, int iPort, string sUsername)
 
 void ClientCon::SendData(string sMessage)
 {
-	string sTemp = m_pUser +">>"+ sMessage+"\n";
+	string sTemp = m_pUser + ">>" + sMessage + "\n";
 
 	if( send(s , sTemp.c_str(), sTemp.size() , 0) < 0)
     {
