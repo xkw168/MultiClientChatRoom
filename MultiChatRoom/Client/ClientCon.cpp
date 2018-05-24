@@ -67,7 +67,7 @@ void ClientCon::StartConnect(string sAddress, int iPort, string sUsername)
      
     //Send some data
     //message = "GET / HTTP/1.1\r\n\r\n";
-   /*
+    /*
 	
     puts("Data Send\n");
      */

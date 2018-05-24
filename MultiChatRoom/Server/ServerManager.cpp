@@ -137,7 +137,7 @@ UINT __cdecl ServerManager::DataThreadFunc(LPVOID pParam)
 
 
 	char *message;
-	message = "Welcome to Matrix chat room.\n";
+	message = "Welcome to Magic TCP chat room.\n";
     send(pYourSocket , message , strlen(message) , 0);//send the message to a specific connected socket
 	char server_reply[2000];
     int recv_size;

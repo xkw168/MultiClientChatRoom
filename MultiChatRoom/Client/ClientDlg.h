@@ -40,10 +40,6 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
-	afx_msg void OnBnClickedOk();
-	afx_msg void OnBnClickedButton2();
-	afx_msg void OnBnClickedButton4();
-
 	ClientCon *m_pClient;
 	static UINT __cdecl StaticThreadFunc(LPVOID pParam);
     UINT ThreadFunc();
@@ -56,5 +52,9 @@ private:
 
 public:
 	CEdit m_Textbox;
-	afx_msg void OnBnClickedButton3();
+	afx_msg void OnBnClickedOk();
+	afx_msg void OnClickedBtLogin();
+	afx_msg void OnClickedBtLogout();
+	afx_msg void OnClickedBtSend();
+	afx_msg void OnClickedBtClear();
 };

@@ -67,7 +67,7 @@ CClientDlg::CClientDlg(CWnd* pParent /*=NULL*/)
 void CClientDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_EDIT1, m_Textbox);
+	DDX_Control(pDX, IDC_EDIT_Message, m_Textbox);
 }
 
 BEGIN_MESSAGE_MAP(CClientDlg, CDialogEx)
@@ -75,9 +75,10 @@ BEGIN_MESSAGE_MAP(CClientDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDOK, &CClientDlg::OnBnClickedOk)
-	ON_BN_CLICKED(IDC_BUTTON2, &CClientDlg::OnBnClickedButton2)
-	ON_BN_CLICKED(IDC_BUTTON4, &CClientDlg::OnBnClickedButton4)
-	ON_BN_CLICKED(IDC_BUTTON3, &CClientDlg::OnBnClickedButton3)
+	ON_BN_CLICKED(IDC_BT_LogIn, &CClientDlg::OnClickedBtLogin)
+	ON_BN_CLICKED(IDC_BT_LogOut, &CClientDlg::OnClickedBtLogout)
+	ON_BN_CLICKED(IDC_BT_Send, &CClientDlg::OnClickedBtSend)
+	ON_BN_CLICKED(IDC_BT_CLEAR, &CClientDlg::OnClickedBtClear)
 END_MESSAGE_MAP()
 
 
@@ -166,43 +167,6 @@ HCURSOR CClientDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-void CClientDlg::OnBnClickedOk()
-{
-	// TODO: Add your control notification handler code here
-	//CDialogEx::OnOK();
-	//OnBnClickedButton1();
-	OnBnClickedButton4();
-}
-
-void CClientDlg::OnBnClickedButton2()
-{
-	// TODO: Add your control notification handler code here
-	cTh = AfxBeginThread(
-    StaticThreadFunc,
-    this);
-	
-	//cTh->m_bAutoDelete = FALSE;
-	m_Thread_handle = cTh->m_hThread;
-}
-
-
-void CClientDlg::OnBnClickedButton4()
-{
-	// TODO: Add your control notification handler code here
-	CString sTextData;
-	GetDlgItemText(IDC_EDIT7, sTextData);
-	
-	CT2CA CStringToAscii(sTextData);
-
-      // construct a std::string using the LPCSTR input
-     std::string sResultedString (CStringToAscii);
-	 if(m_pClient != NULL)
-	 m_pClient->SendData(sResultedString);
-	 CWnd* pWnd = GetDlgItem(IDC_EDIT7);
-	 pWnd->SetWindowText(_T(""));
-}
-
-
 void CClientDlg::ShowServerInfo(string sValue)
 {
 	CString strLine(sValue.c_str());
@@ -233,39 +197,84 @@ UINT __cdecl CClientDlg::StaticThreadFunc(LPVOID pParam)
 
 UINT CClientDlg::ThreadFunc()
 { 
-    // Do your thing, this thread now has access to all the classes member variables
-	
-
-	CString txtname; 
-	GetDlgItemText(IDC_EDIT2, txtname);
+	CString IPname; 
+	GetDlgItemText(IDC_EDIT_IP, IPname);
 
 	CString portname;
-	GetDlgItemText(IDC_EDIT3, portname);
+	GetDlgItemText(IDC_EDIT_Port, portname);
 	int iPort = _wtoi( portname.GetString() );
 	
 	CString username;
-	GetDlgItemText(IDC_EDIT6, username);
+	GetDlgItemText(IDC_EDIT_Name, username);
 
 	m_pClient = new ClientCon(this);
 
-	CT2CA CStringToAscii(txtname);
+	CT2CA CStringToAscii(IPname);
 
-      // construct a std::string using the LPCSTR input
-     std::string sResultedString (CStringToAscii);
+    //construct a std::string using the LPCSTR input
+    std::string IPAddress (CStringToAscii);
      
 	CT2CA CStringToAscii2(username);
 
-	std::string sResultedString2 (CStringToAscii2);
+	std::string UserName (CStringToAscii2);
 
-	m_pClient->StartConnect(sResultedString, iPort, sResultedString2);
+	m_pClient->StartConnect(IPAddress, iPort, UserName);
 	return 0;
 }
 
-
-void CClientDlg::OnBnClickedButton3()
+void CClientDlg::OnBnClickedOk()
 {
 	// TODO: Add your control notification handler code here
-	
-	ShowServerInfo(m_pClient->m_pUser+ " is logged out\n");
-	delete m_pClient;
+	//CDialogEx::OnOK();
+	//OnBnClickedButton1();
+	OnClickedBtLogin();
+}
+
+void CClientDlg::OnClickedBtLogin()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	cTh = AfxBeginThread(StaticThreadFunc, this);
+	m_Thread_handle = cTh->m_hThread;
+}
+
+
+void CClientDlg::OnClickedBtLogout()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	if (m_pClient != NULL)
+	{
+		std::string sResultedString(m_pClient->m_pUser + " is logged out\n");
+		m_pClient->SendData(sResultedString);
+	    ShowServerInfo(sResultedString);
+		delete m_pClient;
+	}
+	else
+	{
+		ShowServerInfo("You haven't log in yet.\n");
+	}
+}
+
+
+void CClientDlg::OnClickedBtSend()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CString sTextData;
+	GetDlgItemText(IDC_EDIT_SendText, sTextData);
+
+	CT2CA CStringToAscii(sTextData);
+
+	// construct a std::string using the LPCSTR input
+	std::string sResultedString(CStringToAscii);
+	if (m_pClient != NULL)
+		m_pClient->SendData(sResultedString);
+	CWnd* pWnd = GetDlgItem(IDC_EDIT_SendText);
+	pWnd->SetWindowText(_T(""));//清空发送区
+}
+
+
+void CClientDlg::OnClickedBtClear()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CWnd* pWnd = GetDlgItem(IDC_EDIT_Message);
+	pWnd->SetWindowText(_T("Welcome to Magic TCP chat room!!!"));//清空接收区
 }

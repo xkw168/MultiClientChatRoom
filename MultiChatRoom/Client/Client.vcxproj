@@ -97,6 +97,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
     <None Include="ReadMe.txt" />
     <None Include="res\Client.ico" />
     <None Include="res\Client.rc2" />
