@@ -1,18 +1,12 @@
 
 // ClientDlg.h : header file
 //
-/*
-Coded by Robel Sharma
-Date: 20-08-2013
-If you use in any product please
-make sure to write my credits
-
-*/
 
 #pragma once
-#include "ClientCon.h"
-#include <Windows.h>
+#include "stdafx.h"
 #include "resource.h"
+#include <string>
+#include "ClientCon.h"
 
 // CClientDlg dialog
 class CClientDlg : public CDialogEx
@@ -25,7 +19,7 @@ public:
 // Dialog Data
 enum { IDD = IDD_CLIENT_DIALOG };
 
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 
 
@@ -38,7 +32,7 @@ protected:
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
-	DECLARE_MESSAGE_MAP()
+	DECLARE_MESSAGE_MAP();
 public:
 	ClientCon *m_pClient;
 	static UINT __cdecl StaticThreadFunc(LPVOID pParam);
@@ -57,4 +51,5 @@ public:
 	afx_msg void OnClickedBtLogout();
 	afx_msg void OnClickedBtSend();
 	afx_msg void OnClickedBtClear();
+	afx_msg void OnClickedBtFile();
 };

@@ -139,21 +139,25 @@ UINT __cdecl ServerManager::DataThreadFunc(LPVOID pParam)
 	char *message;
 	message = "Welcome to Magic TCP chat room.\n";
     send(pYourSocket , message , strlen(message) , 0);//send the message to a specific connected socket
-	char server_reply[2000];
+	char server_reply[1024];
     int recv_size;
 
-	while((recv_size = recv(pYourSocket , server_reply , 2000 , 0)) != SOCKET_ERROR)
+	while((recv_size = recv(pYourSocket , server_reply , 1024 , 0)) != SOCKET_ERROR)
 	{
 		server_reply[recv_size] = '\0';//the end of a string
 		//m_pDialog->ShowServerInfo("Message Received: "+ string(server_reply));
 		for(int i = 1;i <= iCount; i++)
-		{//transfer the received message to every connected client(socket)
-			if( send(sArray[i] , server_reply, recv_size , 0)  == SOCKET_ERROR)
+		{
+			//transfer the received message to every connected client(socket)
+			if(sArray[i] != pYourSocket)//没必要转发给发消息的人
 			{
-				puts("Send failed");
+				if (send(sArray[i], server_reply, recv_size, 0) == SOCKET_ERROR)
+				{
+					puts("Send failed");
+				}
 			}
 		}
-
+		//send(pYourSocket, "ready", 5, 0);//发送确认回信
 	}
     return 0;
 }

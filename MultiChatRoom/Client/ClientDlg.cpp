@@ -1,20 +1,13 @@
 
 // ClientDlg.cpp : implementation file
 //
-/*
-Coded by Robel Sharma
-Date: 20-08-2013
-If you use in any product please
-make sure to write my credits
-
-*/
 
 #include "stdafx.h"
-#include "Client.h"
 #include "ClientDlg.h"
 #include "ClientCon.h"
-#include "afxdialogex.h"
-
+#include "FileUtil.h"
+#include <string>
+using namespace std;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -79,6 +72,7 @@ BEGIN_MESSAGE_MAP(CClientDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BT_LogOut, &CClientDlg::OnClickedBtLogout)
 	ON_BN_CLICKED(IDC_BT_Send, &CClientDlg::OnClickedBtSend)
 	ON_BN_CLICKED(IDC_BT_CLEAR, &CClientDlg::OnClickedBtClear)
+	ON_BN_CLICKED(IDC_BT_FILE, &CClientDlg::OnClickedBtFile)
 END_MESSAGE_MAP()
 
 
@@ -224,9 +218,6 @@ UINT CClientDlg::ThreadFunc()
 
 void CClientDlg::OnBnClickedOk()
 {
-	// TODO: Add your control notification handler code here
-	//CDialogEx::OnOK();
-	//OnBnClickedButton1();
 	OnClickedBtLogin();
 }
 
@@ -236,7 +227,6 @@ void CClientDlg::OnClickedBtLogin()
 	cTh = AfxBeginThread(StaticThreadFunc, this);
 	m_Thread_handle = cTh->m_hThread;
 }
-
 
 void CClientDlg::OnClickedBtLogout()
 {
@@ -277,4 +267,30 @@ void CClientDlg::OnClickedBtClear()
 	// TODO: 在此添加控件通知处理程序代码
 	CWnd* pWnd = GetDlgItem(IDC_EDIT_Message);
 	pWnd->SetWindowText(_T("Welcome to Magic TCP chat room!!!"));//清空接收区
+}
+
+
+void CClientDlg::OnClickedBtFile()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	// 设置过滤器     
+	TCHAR szFilter[] = _T("记事本文件(*.txt*)|*.txt*|所有文件(*.*)|*.*||");
+	// 构造打开文件对话框     
+	CFileDialog fileDlg(TRUE, _T("."), NULL, 0, szFilter, this);
+	CString strFilePath;
+	CString strFileName;
+
+	// 显示打开文件对话框     
+	if (IDOK == fileDlg.DoModal())
+	{
+		// 如果点击了文件对话框上的“打开”按钮，则将选择的文件路径显示到编辑框里     
+		strFilePath = fileDlg.GetPathName();
+		strFileName = fileDlg.GetFileTitle();
+		FileUtil fu;
+		FILE *f = fu.openFile(strFilePath);
+		if ((f != NULL) && (m_pClient != NULL))
+		{
+			m_pClient->SendFile(f, strFileName);
+		}
+	}
 }
