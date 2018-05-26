@@ -52,4 +52,5 @@ public:
 	afx_msg void OnClickedBtSend();
 	afx_msg void OnClickedBtClear();
 	afx_msg void OnClickedBtFile();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

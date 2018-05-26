@@ -255,8 +255,10 @@ void CClientDlg::OnClickedBtSend()
 
 	// construct a std::string using the LPCSTR input
 	std::string sResultedString(CStringToAscii);
-	if (m_pClient != NULL)
+	if (m_pClient != NULL) 
+	{
 		m_pClient->SendData(sResultedString);
+	}
 	CWnd* pWnd = GetDlgItem(IDC_EDIT_SendText);
 	pWnd->SetWindowText(_T(""));//清空发送区
 }
@@ -293,4 +295,19 @@ void CClientDlg::OnClickedBtFile()
 			m_pClient->SendFile(f, strFileName);
 		}
 	}
+}
+
+
+BOOL CClientDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	if ((pMsg->message == WM_KEYDOWN) && (pMsg->wParam == VK_RETURN))
+	{
+		if (GetDlgItem(IDC_EDIT_SendText) == GetFocus())
+		{
+			OnClickedBtSend();
+			return false;
+		}
+	}
+	return CDialogEx::PreTranslateMessage(pMsg);
 }
