@@ -13,7 +13,7 @@ public:
 	ClientCon(CClientDlg *dlg);
 	~ClientCon(void);
 	void StartConnect(string sAddress, int iPort, string sUsername);
-	void SendData(string sMessage);
+	void SendData(string sMessage, bool showName = false);
 	void SendFile(FILE* file, CString filename);
 
 	WSADATA wsa;

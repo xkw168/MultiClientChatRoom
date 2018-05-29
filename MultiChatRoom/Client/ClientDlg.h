@@ -52,5 +52,6 @@ public:
 	afx_msg void OnClickedBtSend();
 	afx_msg void OnClickedBtClear();
 	afx_msg void OnClickedBtFile();
+	//在系统之前截获按键信息
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

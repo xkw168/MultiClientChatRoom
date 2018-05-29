@@ -29,8 +29,9 @@ ClientCon::~ClientCon(void)
 
 void ClientCon::StartConnect(string sAddress, int iPort, string sUsername)
 {
+	const int REC_BUFERSIZE = 2048;
     struct sockaddr_in server;
-    char *message , server_reply[2048];
+    char *message , server_reply[REC_BUFERSIZE + 1];
     int recv_size;
 	m_pUser = sUsername;
 
@@ -64,7 +65,7 @@ void ClientCon::StartConnect(string sAddress, int iPort, string sUsername)
     }
     
     //Receive data from the server
-    while((recv_size = recv(sClient, server_reply , 2048, 0)) != SOCKET_ERROR)
+    while((recv_size = recv(sClient, server_reply , REC_BUFERSIZE, 0)) != SOCKET_ERROR)
     { 
 		//Add a NULL terminating character to make it a proper string before printing
 		server_reply[recv_size] = '\0';
@@ -78,37 +79,46 @@ void ClientCon::StartConnect(string sAddress, int iPort, string sUsername)
 			//filename = server_reply;//保存文件名
 			if (file != NULL)//成功创建文件
 			{
+				bool isOver = false;
+				int i;
 				while (true)
 				{
-					fd_set	recvfd;
+					/*fd_set	recvfd;
 					struct timeval tv = { 3, 0 };
 
 					FD_ZERO(&recvfd);
 					FD_SET(sClient, &recvfd);
 
 					//检测有没有数据到达socket,有->接收数据，无->break
-					int result = select(0, &recvfd, NULL, NULL, &tv);
-					if (result > 0)
+					int result = select(0, &recvfd, NULL, NULL, &tv);*/
+					//接收数据
+					recv_size = recv(sClient, server_reply, 2048, 0);
+					server_reply[recv_size] = '\0';//添加文件结尾标志
+					Sleep(500);
+					//判断是否含有规定的文件结束标志
+					for (i = 0; i < (recv_size - 4); i++)
 					{
-						//接受数据
-						recv_size = recv(sClient, server_reply, 2048, 0);
-						server_reply[recv_size] = '\0';//添加文件结尾标志
-						string sTemp = string(server_reply);
-						if ((sTemp == "over") || (recv_size == 0))
+						if (server_reply[i] == 'O' &&
+							server_reply[i + 1] == 'V' &&
+							server_reply[i + 2] == 'E' &&
+							server_reply[i + 3] == 'R' &&
+							server_reply[i + 4] == '!')
 						{
+							isOver = true;
 							break;
 						}
-						else
-						{
-							//循环一直写入文件
-							fwrite(server_reply, 1, recv_size, file);
-							//发送确认信息(防止数据发送过快来不及接收)
-							//send(sClient, "ready", 5, 0);
-						}
+
+					}
+					if (isOver)
+					{
+						recv_size = (i == recv_size - 4) ? recv_size : (i - 1);
+						fwrite(server_reply, 1, recv_size, file);
+						break;
 					}
 					else
 					{
-						break;
+						//循环一直写入文件
+						fwrite(server_reply, 1, recv_size, file);
 					}
 				}
 				fclose(file);
@@ -121,13 +131,21 @@ void ClientCon::StartConnect(string sAddress, int iPort, string sUsername)
 		}*/
 		else
 		{
-			m_pClient->ShowServerInfo(sTempMsg);
+			if (sTempMsg1 == "READY!")
+			{
+				isReady = true;
+			}
+			else//控制信息不打印
+			{
+				m_pClient->ShowServerInfo(sTempMsg);
+			}
 		}
     }
 }
 
-void ClientCon::SendData(string sMessage)
+void ClientCon::SendData(string sMessage, bool showName)
 {
+	isReady = false;
 	if (sMessage.length() > 0)
 	{
 		string sTemp = m_pUser + ">>" + sMessage + "\n";
@@ -139,6 +157,8 @@ void ClientCon::SendData(string sMessage)
 		}
 		else
 		{
+			sTemp = "您（" + m_pUser + ")>>" + sMessage + "\n";
+			//显示自己发送的消息
 			m_pClient->ShowServerInfo(sTemp);
 		}
 	}
@@ -150,22 +170,22 @@ void ClientCon::SendFile(FILE* file, CString filename)
 	CString a = CString(".txt");
 	filename.Append(a);//加上后缀
 	char *data = fu.CString2Char(filename);
+	isReady = false;
 	send(sClient, data, filename.GetLength(), 0);//先发送文件名，让接收端做好接受准备
-
-	const int BUFSIZE = 512;
-	char sendData[BUFSIZE];
+	while (!isReady);
+	isReady = false;
+	Sleep(100);
+	const int SEND_BUFSIZE = 512;
+	char sendData[SEND_BUFSIZE + 1];
 	char recData[20] = {'0'};
 	int nCount;//nCount：实际读取的字符数量
-	while ((nCount = fread(sendData, 1, BUFSIZ, file)) > 0)//每次读取2048个字符一起发送
+	while ((nCount = fread(sendData, 1, SEND_BUFSIZE, file)) > 0)//每次读取512个字符一起发送
 	{
+		//sendData[nCount] = '\0';
 		send(sClient, sendData, nCount, 0);
-		//while (!isReady);//阻塞等待接收方发送确认
-		/*int ret = recv(sClient, recData, 20, 0);//阻塞等待，用于控制数据流量
-		if (ret > 0)
-		{
-			recData[ret] = '\0';
-		}*/
+		while (!isReady);//阻塞等待接收方发送确认
+		isReady = false;
 	}
-	//Sleep(100);
-	//send(sClient, "over", 4, 0);//发送文件发送完毕标志
+	Sleep(500);
+	send(sClient, "OVER!", 5, 0);//发送文件发送完毕标志
 }

@@ -46,10 +46,6 @@ END_MESSAGE_MAP()
 
 
 // CClientDlg dialog
-
-
-
-
 CClientDlg::CClientDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CClientDlg::IDD, pParent),
 	m_pClient(NULL)
@@ -259,6 +255,10 @@ void CClientDlg::OnClickedBtSend()
 	{
 		m_pClient->SendData(sResultedString);
 	}
+	else
+	{
+		ShowServerInfo("Please log in first.\n");
+	}
 	CWnd* pWnd = GetDlgItem(IDC_EDIT_SendText);
 	pWnd->SetWindowText(_T(""));//清空发送区
 }
@@ -292,7 +292,12 @@ void CClientDlg::OnClickedBtFile()
 		FILE *f = fu.openFile(strFilePath);
 		if ((f != NULL) && (m_pClient != NULL))
 		{
+			m_pClient->SendData("群发了文件" + std::string(CW2A(strFileName.GetString())));
 			m_pClient->SendFile(f, strFileName);
+		}
+		else
+		{
+			ShowServerInfo("Please log in first.\n");
 		}
 	}
 }
