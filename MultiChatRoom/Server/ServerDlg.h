@@ -54,4 +54,6 @@ public:
 private:
 	HANDLE m_Thread_handle;
 	CWinThread *cTh;
+public:
+	afx_msg void OnClickedBtClear();
 };

@@ -207,7 +207,7 @@ UINT CClientDlg::ThreadFunc()
 	CT2CA CStringToAscii2(username);
 
 	std::string UserName (CStringToAscii2);
-
+	//StartConnect()死循环等待数据，所以只能放在子线程
 	m_pClient->StartConnect(IPAddress, iPort, UserName);
 	return 0;
 }
@@ -219,9 +219,14 @@ void CClientDlg::OnBnClickedOk()
 
 void CClientDlg::OnClickedBtLogin()
 {
-	// TODO: 在此添加控件通知处理程序代码
-	cTh = AfxBeginThread(StaticThreadFunc, this);
-	m_Thread_handle = cTh->m_hThread;
+	//一个客户端可能同时连接不止一个服务器，所以开新的线程处理连接
+	//cTh = AfxBeginThread(StaticThreadFunc, this);
+	//m_Thread_handle = cTh->m_hThread;
+	if (m_pClient == NULL)
+	{
+		cTh = AfxBeginThread(StaticThreadFunc, this);
+		m_Thread_handle = cTh->m_hThread;
+	}
 }
 
 void CClientDlg::OnClickedBtLogout()
@@ -231,8 +236,9 @@ void CClientDlg::OnClickedBtLogout()
 	{
 		std::string sResultedString(m_pClient->m_pUser + " is logged out\n");
 		m_pClient->SendData(sResultedString);
-	    ShowServerInfo(sResultedString);
+	    //ShowServerInfo(sResultedString);
 		delete m_pClient;
+		m_pClient = NULL;
 	}
 	else
 	{

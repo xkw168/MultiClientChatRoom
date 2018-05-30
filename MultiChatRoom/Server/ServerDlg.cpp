@@ -57,7 +57,7 @@ CServerDlg::CServerDlg(CWnd* pParent /*=NULL*/)
 	m_pServer(NULL)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
-	m_buffer = _T("");
+	m_buffer = _T("This is a Magic TCP chat room!!!\n");
 	cTh = NULL;
 }
 
@@ -77,6 +77,7 @@ BEGIN_MESSAGE_MAP(CServerDlg, CDialogEx)
 	ON_BN_CLICKED(IDOK, &CServerDlg::OnBnClickedOk)
 	ON_BN_CLICKED(IDC_BT_START, &CServerDlg::OnClickedBtStart)
     ON_BN_CLICKED(IDC_BT_STOP, &CServerDlg::OnClickedBtStop)
+	ON_BN_CLICKED(IDC_BT_CLEAR, &CServerDlg::OnClickedBtClear)
 END_MESSAGE_MAP()
 
 
@@ -203,11 +204,11 @@ void CServerDlg::OnClickedBtStop()
 	{
 		m_pServer->ClearServer();
 		m_pServer = NULL;
-		ShowServerInfo("Stop successful\n");
+		ShowServerInfo("Stop serve successful\n");
 	}
 	else
 	{
-		ShowServerInfo("The serve has been stopped......\n");
+		ShowServerInfo("The serve is not running......\n");
 	}
 }
 
@@ -253,4 +254,11 @@ UINT CServerDlg::ThreadFunc()
 	m_pServer = new ServerManager(this);
 	m_pServer->StartListening(iPort);
 	return 0;
+}
+
+void CServerDlg::OnClickedBtClear()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CWnd* pWnd = GetDlgItem(IDC_EDIT2);
+	pWnd->SetWindowText(_T("This is a Magic TCP chat room!!!\n"));
 }

@@ -6,7 +6,7 @@
 #pragma  comment(lib,"ws2_32.lib")
 using namespace std;
 
-static class FileUtil
+class FileUtil
 {
 private:
 	FILE *f;

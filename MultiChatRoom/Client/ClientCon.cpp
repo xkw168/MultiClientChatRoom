@@ -18,6 +18,7 @@ ClientCon::ClientCon(CClientDlg *dlg)
 	m_pClient = dlg;
 	isFile = false;
 	isReady = false;
+	sClient = 1;
 }
 
 
@@ -44,7 +45,7 @@ void ClientCon::StartConnect(string sAddress, int iPort, string sUsername)
      
     printf("Initialised.\n");
      
-    //Create a socket
+    //Create a socket(SOCK_STREAM: connection-oriented)
     if((sClient = socket(AF_INET , SOCK_STREAM , 0 )) == INVALID_SOCKET)
     {
         printf("Could not create socket : %d" , WSAGetLastError());
@@ -112,6 +113,7 @@ void ClientCon::StartConnect(string sAddress, int iPort, string sUsername)
 					if (isOver)
 					{
 						recv_size = (i == recv_size - 4) ? recv_size : (i - 1);
+						recv_size = (recv_size < 0) ? 0 : recv_size;
 						fwrite(server_reply, 1, recv_size, file);
 						break;
 					}
@@ -125,10 +127,6 @@ void ClientCon::StartConnect(string sAddress, int iPort, string sUsername)
 				isFile = false;
 			}
 		}
-		/*else if (sTempMsg1 == "ready")
-		{
-			isReady = true;
-		}*/
 		else
 		{
 			if (sTempMsg1 == "READY!")
