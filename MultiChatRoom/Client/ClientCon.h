@@ -24,6 +24,5 @@ public:
 	bool isReady;//发送方用于控制是否继续发送文件
 	FileUtil fu;
 	FILE * file;
-	char* filename;
 };
 

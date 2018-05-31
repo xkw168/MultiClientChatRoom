@@ -70,14 +70,15 @@ void ClientCon::StartConnect(string sAddress, int iPort, string sUsername)
     { 
 		//Add a NULL terminating character to make it a proper string before printing
 		server_reply[recv_size] = '\0';
-
+		
 		string sTempMsg1 = string(server_reply);
 		string sTempMsg ="\n" + string(server_reply) + "\n";
-		if (!(isFile) && (sTempMsg1.find(".txt", 4) < 100))
+		//判断是否包含文件.txt标志
+		if (!(isFile) && (sTempMsg1.find(".txt") != string::npos))
+		//if(isFile)
 		{
 			isFile = true;
 			file = fu.createFile(server_reply);//创建文件准备存放数据
-			//filename = server_reply;//保存文件名
 			if (file != NULL)//成功创建文件
 			{
 				bool isOver = false;
@@ -186,4 +187,5 @@ void ClientCon::SendFile(FILE* file, CString filename)
 	}
 	Sleep(500);
 	send(sClient, "OVER!", 5, 0);//发送文件发送完毕标志
+	fclose(file);
 }
