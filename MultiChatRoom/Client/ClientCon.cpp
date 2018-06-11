@@ -1,11 +1,3 @@
-/*
-Coded by Robel Sharma
-Date: 20-08-2013
-If you use in any product please
-make sure to write my credits
-
-*/
-
 #include "stdafx.h"
 #include "ClientCon.h"
 #include "ClientDlg.h"
@@ -134,7 +126,7 @@ void ClientCon::StartConnect(string sAddress, int iPort, string sUsername)
 			{
 				isReady = true;
 			}
-			else//控制信息不打印
+			else if(sTempMsg1.length() != 0)//控制信息不打印
 			{
 				m_pClient->ShowServerInfo(sTempMsg);
 			}

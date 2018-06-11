@@ -1,23 +1,2 @@
-﻿  ClientDlg.cpp
-e:\learn\计算机网络\multiclientchatroom\multichatroom\client\fileutil.h(17): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(205): note: 参见“fopen”的声明
-e:\learn\计算机网络\multiclientchatroom\multichatroom\client\fileutil.h(32): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(205): note: 参见“fopen”的声明
-e:\learn\计算机网络\multiclientchatroom\multichatroom\client\fileutil.h(46): warning C4800: “int”: 将值强制为布尔值“true”或“false”(性能警告)
-e:\learn\计算机网络\multiclientchatroom\multichatroom\client\fileutil.h(46): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(90): note: 参见“strcat”的声明
-  ClientCon.cpp
-e:\learn\计算机网络\multiclientchatroom\multichatroom\client\fileutil.h(17): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(205): note: 参见“fopen”的声明
-e:\learn\计算机网络\multiclientchatroom\multichatroom\client\fileutil.h(32): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(205): note: 参见“fopen”的声明
-e:\learn\计算机网络\multiclientchatroom\multichatroom\client\fileutil.h(46): warning C4800: “int”: 将值强制为布尔值“true”或“false”(性能警告)
-e:\learn\计算机网络\multiclientchatroom\multichatroom\client\fileutil.h(46): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(90): note: 参见“strcat”的声明
-e:\learn\计算机网络\multiclientchatroom\multichatroom\client\clientcon.cpp(57): warning C4996: 'inet_addr': Use inet_pton() or InetPton() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
-  c:\program files (x86)\windows kits\8.1\include\um\winsock2.h(1850): note: 参见“inet_addr”的声明
-e:\learn\计算机网络\multiclientchatroom\multichatroom\client\clientcon.cpp(35): warning C4101: “message”: 未引用的局部变量
-  正在生成代码...
-cl : 命令行 warning D9028: 最小重新生成失败，正在转换为标准生成
-  Client.vcxproj -> E:\Learn\计算机网络\MultiClientChatRoom\MultiChatRoom\Debug\Client.exe
+﻿  Client.vcxproj -> E:\Learn\计算机网络\MultiClientChatRoom\MultiChatRoom\Debug\Client.exe
   Client.vcxproj -> E:\Learn\计算机网络\MultiClientChatRoom\MultiChatRoom\Debug\Client.pdb (Full PDB)

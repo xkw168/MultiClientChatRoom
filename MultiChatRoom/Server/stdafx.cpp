@@ -1,14 +1,8 @@
-/*
-Coded by Robel Sharma
-Date: 20-08-2013
-If you use in any product please
-make sure to write my credits
-
-*/
-// stdafx.cpp : source file that includes just the standard includes
-// Server.pch will be the pre-compiled header
-// stdafx.obj will contain the pre-compiled type information
+// stdafx.cpp : 只包括标准包含文件的源文件
+// Serve_win32.pch 将作为预编译头
+// stdafx.obj 将包含预编译类型信息
 
 #include "stdafx.h"
 
-
+// TODO: 在 STDAFX.H 中引用任何所需的附加头文件，
+//而不是在此文件中引用

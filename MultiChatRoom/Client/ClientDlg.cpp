@@ -187,23 +187,13 @@ UINT __cdecl CClientDlg::StaticThreadFunc(LPVOID pParam)
 
 UINT CClientDlg::ThreadFunc()
 { 
-	CString IPname; 
-	GetDlgItemText(IDC_EDIT_IP, IPname);
-
-	CString portname;
-	GetDlgItemText(IDC_EDIT_Port, portname);
-	int iPort = _wtoi( portname.GetString() );
-	
 	CString username;
 	GetDlgItemText(IDC_EDIT_Name, username);
 
 	m_pClient = new ClientCon(this);
 
-	CT2CA CStringToAscii(IPname);
-
-    //construct a std::string using the LPCSTR input
-    std::string IPAddress (CStringToAscii);
-     
+	string IPAddress = "203.195.199.250";
+	int iPort = 1680;
 	CT2CA CStringToAscii2(username);
 
 	std::string UserName (CStringToAscii2);
@@ -220,8 +210,6 @@ void CClientDlg::OnBnClickedOk()
 void CClientDlg::OnClickedBtLogin()
 {
 	//一个客户端可能同时连接不止一个服务器，所以开新的线程处理连接
-	//cTh = AfxBeginThread(StaticThreadFunc, this);
-	//m_Thread_handle = cTh->m_hThread;
 	if (m_pClient == NULL)
 	{
 		cTh = AfxBeginThread(StaticThreadFunc, this);
@@ -236,7 +224,6 @@ void CClientDlg::OnClickedBtLogout()
 	{
 		std::string sResultedString(m_pClient->m_pUser + " is logged out\n");
 		m_pClient->SendData(sResultedString);
-	    //ShowServerInfo(sResultedString);
 		delete m_pClient;
 		m_pClient = NULL;
 	}

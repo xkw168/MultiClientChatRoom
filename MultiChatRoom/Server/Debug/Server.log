@@ -1,8 +1,0 @@
-﻿  正在跳过...(未检测到相关更改)
-  stdafx.cpp
-  ServerManager.cpp
-e:\learn\计算机网络\multiclientchatroom\multichatroom\server\servermanager.cpp(85): warning C4101: “message”: 未引用的局部变量
-  ServerDlg.cpp
-  正在生成代码...
-  Server.vcxproj -> E:\Learn\计算机网络\MultiClientChatRoom\MultiChatRoom\Debug\Server.exe
-  Server.vcxproj -> E:\Learn\计算机网络\MultiClientChatRoom\MultiChatRoom\Debug\Server.pdb (Full PDB)

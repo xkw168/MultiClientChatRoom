@@ -1,13 +1,5 @@
 
 // Client.cpp : Defines the class behaviors for the application.
-//
-/*
-Coded by Robel Sharma
-Date: 20-08-2013
-If you use in any product please
-make sure to write my credits
-
-*/
 #include "stdafx.h"
 #include "Client.h"
 #include "ClientDlg.h"

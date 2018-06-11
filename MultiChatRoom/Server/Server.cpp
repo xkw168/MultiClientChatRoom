@@ -1,110 +1,44 @@
-/*
-Coded by Robel Sharma
-Date: 20-08-2013
-If you use in any product please
-make sure to write my credits
-
-*/
-// Server.cpp : Defines the class behaviors for the application.
+// Serve_win32.cpp : 定义控制台应用程序的入口点。
 //
 
 #include "stdafx.h"
-#include "Server.h"
-#include "ServerDlg.h"
+#include "ServeManager.h"
+#include <Windows.h>
+#include <iostream>
+using namespace std;
 
+DWORD WINAPI ThreadFunc(LPVOID lpParameter);
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
+ServeManager *m_pServer;
+BOOL CtrlHandler(DWORD fdwCtrlType);
 
-
-// CServerApp
-
-BEGIN_MESSAGE_MAP(CServerApp, CWinApp)
-	ON_COMMAND(ID_HELP, &CWinApp::OnHelp)
-END_MESSAGE_MAP()
-
-
-// CServerApp construction
-
-CServerApp::CServerApp()
+int main()
 {
-	// support Restart Manager
-	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_RESTART;
-
-	// TODO: add construction code here,
-	// Place all significant initialization in InitInstance
+	if (SetConsoleCtrlHandler((PHANDLER_ROUTINE)CtrlHandler, TRUE))
+	{
+		//printf("调用WINDOWS API函数-->SetConsoleCtrlHandler函数.\n");
+		int iPort = 1680;
+		m_pServer = new ServeManager();
+		m_pServer->StartListening(iPort);
+	}
+	else
+	{
+		printf("ERROR: could not set control handler.\n");
+	}
+		
+    return 0;
 }
 
-
-// The one and only CServerApp object
-
-CServerApp theApp;
-
-
-// CServerApp initialization
-
-BOOL CServerApp::InitInstance()
+BOOL CtrlHandler(DWORD fdwCtrlType)
 {
-	// InitCommonControlsEx() is required on Windows XP if an application
-	// manifest specifies use of ComCtl32.dll version 6 or later to enable
-	// visual styles.  Otherwise, any window creation will fail.
-	INITCOMMONCONTROLSEX InitCtrls;
-	InitCtrls.dwSize = sizeof(InitCtrls);
-	// Set this to include all the common control classes you want to use
-	// in your application.
-	InitCtrls.dwICC = ICC_WIN95_CLASSES;
-	InitCommonControlsEx(&InitCtrls);
-
-	CWinApp::InitInstance();
-
-
-	AfxEnableControlContainer();
-
-	// Create the shell manager, in case the dialog contains
-	// any shell tree view or shell list view controls.
-	CShellManager *pShellManager = new CShellManager;
-
-	// Standard initialization
-	// If you are not using these features and wish to reduce the size
-	// of your final executable, you should remove from the following
-	// the specific initialization routines you do not need
-	// Change the registry key under which our settings are stored
-	// TODO: You should modify this string to be something appropriate
-	// such as the name of your company or organization
-	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
-
-	CServerDlg dlg;
-	m_pMainWnd = &dlg;
-	INT_PTR nResponse = dlg.DoModal();
-	if (nResponse == IDOK)
+	switch (fdwCtrlType)
 	{
-		// TODO: Place code here to handle when the dialog is
-		//  dismissed with OK
-	}
-	else if (nResponse == IDCANCEL)
-	{
-		// TODO: Place code here to handle when the dialog is
-		//  dismissed with Cancel
-	}
+	/* handle the CTRL-CLOSE signal */
+	case CTRL_CLOSE_EVENT:
+		m_pServer->ClearServer();
+		return TRUE;
 
-	// Delete the shell manager created above.
-	if (pShellManager != NULL)
-	{
-		delete pShellManager;
+	default:
+		return FALSE;
 	}
-
-	// Since the dialog has been closed, return FALSE so that we exit the
-	//  application, rather than start the application's message pump.
-	return FALSE;
-}
-
-void CServerApp::OnServerAction(string sValue)
-{
-	CString strLine;
-    // add CR/LF to text
-    strLine.Format(_T("\r\n%s"), sValue);
-	
-	//dlg.m_buffer = strLine;
-	//dlg.DoModal();
 }
