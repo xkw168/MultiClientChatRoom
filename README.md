@@ -8,3 +8,6 @@ There are two kind of code in the project.
 
 #### CopyRight
 copyright xkw,zrx
+
+#### Mention
+If you run the code and don't get the right answer, it problely because the setting of Visual Studio is not correct. You can try the .exe file in Debug folder.
