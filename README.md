@@ -8,7 +8,7 @@ There are two kind of code in the project.
 2. The code which is not end with _LAN is write in MFC and win32. The server code is writed in win32 and need to be run in a real server, then any computer which runs the client code can communicate with each other.
 
 #### CopyRight
-copyright xkw,zrx
+copyright Kewei Xia, Ruixiang Zhang
 
 #### Mention
 If you run the code and don't get the right answer, it problely because the setting of Visual Studio is not correct. You can try the .exe file in Debug folder.
